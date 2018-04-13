@@ -1,4 +1,4 @@
-# test-task
+# MFU-test-task
 
 > A Vue.js project
 
@@ -19,4 +19,12 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-# MFU-test-task
+
+### Notes
+- [vue-axios](https://www.npmjs.com/package/vue-axios)
+- if it has error "...No 'Access-Control-Allow-Origin'....", try [this](https://community.powerbi.com/t5/Developer/Error-No-Access-Control-Allow-Origin-header-is-present-on-the/m-p/351506#M10446):
+  - add the [extension](https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en-US) in google chrome to allow access using CORS
+  - or In Windows, paste this command in run window
+  ```
+  chrome.exe --user-data-dir="C:/Chrome dev session" --disable-web-security
+  ```
