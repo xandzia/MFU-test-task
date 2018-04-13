@@ -2,15 +2,11 @@
   <div class="regions">
     <h1>{{ msg }}</h1>
 <!--    <button v-on:click.prevent="getResult()">Search</button>-->
-    <select v-model="selected"
-       v-on:click="emit"
-       v-on:change="myMethod()">
+    <select v-model="info.regionId" v-on:click="emit" v-on:change="getTransactions()">
        <option disabled value="">List of regions</option>
-        <option v-for="region in regions" 
-        :key="region.regionCode" 
-        :value="region.regionCode">{{ region.regionName }}</option>
+        <option v-for="region in regions" :key="region.regionCode" :value="region.regionCode">{{ region.regionName }}</option>
     </select>
-      <span>{{ selected }}</span>
+      <span>{{ info.regionId }}</span>
   </div>
 </template>
 
@@ -21,25 +17,36 @@ export default {
   data () {
     return {
       msg: 'regions',
-      selected: '',
+      info: {
+        regionId: '',
+        transactions: []
+      },
       regions: null
     }
   },
   created () {
-    this.getResult()
+    this.getRegions()
   },
   methods: {
-    myMethod () {
-      axios('http://api.spending.gov.ua/api/v2/api/transactions/top100?region='+this.selected, { method: 'GET', mode: 'no-cors' })
+    getTransactions () {
+      axios('http://api.spending.gov.ua/api/v2/api/transactions/top100?region=' + this.info.regionId, { method: 'GET', mode: 'no-cors' })
         .then((response) => {
+          let arr = []
+          for (let i = 0; i < response.data.length; i++) {
+            arr.push(response.data[i].amount)
+          }
+          this.info.transactions = arr
           console.log('transactions', response.data)
         })
         .catch((error) => {
           console.log('err', error)
         })
     },
-    getResult () {
-      axios('http://api.spending.gov.ua/api/v2/regions', { method: 'GET', mode: 'no-cors' })
+    getRegions () {
+      this.getResult('http://api.spending.gov.ua/api/v2/regions')
+    },
+    getResult (api) {
+      axios(api, { method: 'GET', mode: 'no-cors' })
         .then((response) => {
           response.data.shift()
           this.regions = response.data
@@ -50,7 +57,7 @@ export default {
         })
     },
     emit () {
-      this.$emit('event_child', this.selected)
+      this.$emit('event_child', this.info)
     }
   }
 }

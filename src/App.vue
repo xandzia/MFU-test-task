@@ -2,7 +2,7 @@
   <div id="app">
 <!--    <img src="./assets/logo.png">-->
    <regions v-on:event_child="getIdFromRegions"></regions>
-   <transactions :regionId="id"></transactions>
+   <transactions :infoData="data"></transactions>
   </div>
 </template>
 
@@ -13,7 +13,10 @@ export default {
   name: 'App',
   data () {
     return {
-      id: 2
+      data: {
+        id: 0,
+        amountArr: []
+      }
     }
   },
   components: {
@@ -21,8 +24,8 @@ export default {
     Transactions
   },
   methods: {
-    getIdFromRegions (id) {
-      this.id = id
+    getIdFromRegions (data) {
+      this.data = data
     }
   }
 }

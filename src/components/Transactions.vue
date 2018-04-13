@@ -1,7 +1,7 @@
 <template>
   <div class="transactions">
     <h1>{{ msg }}</h1>
-    <h1>{{ regionId }}</h1>
+    <p>{{ infoData }}</p>
     <ul>
 <!--        <li v-for="transaction in transactions"></li>-->
     </ul>
@@ -9,35 +9,20 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   name: 'transactions',
   props: {
-      regionId: {
-          type: Number,
-          required: 2
-      }
+    infoData: {
+      type: Object,
+      required: true
+    }
   },
   data () {
     return {
-      msg: 'transactions',
-      regions: null
+      msg: 'transactions'
     }
-  },
-  created () {
-    this.getResult()
   },
   methods: {
-    getResult () {
-      axios('http://api.spending.gov.ua/api/v2/api/transactions/top100?region='+this.regionId, { method: 'GET', mode: 'no-cors' })
-        .then((response) => {
-          console.log('transactions', response.data)
-          console.log('props', this.regionId)
-        })
-        .catch((error) => {
-          console.log('err', error)
-        })
-    }
   }
 }
 </script>
