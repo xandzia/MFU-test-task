@@ -19,6 +19,11 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Demo
+- if you have this response in console
+- ![Screenshot](static/Screenshot1.png)
+- click "Load unsafe scripts"
+- ![Screenshot](static/Screenshot2.png)
 
 ### Notes
 - [vue-axios](https://www.npmjs.com/package/vue-axios)
