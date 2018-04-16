@@ -57,4 +57,9 @@ export default {
   text-decoration: none;
   color: #3d7bff;
 }
+@media print{
+    .btn {
+        display: none!important;
+    }
+}
 </style>
