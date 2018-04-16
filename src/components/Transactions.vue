@@ -37,6 +37,7 @@ export default {
   },
   watch: {
     'infoData.transactions': function () {
+      this.loader = false
       this.but = this.infoData.transactions
     }
   },

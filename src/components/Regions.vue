@@ -8,6 +8,7 @@
         <option v-for="region in regions" :key="region.regionCode" :value="region.regionCode">{{ region.regionName }}</option>
     </select>
       <span class="down">&#x25BC;</span>
+      <img class="loader" v-show="loader" src="/static/30.gif" alt="loader">
   </div>
   </b-container>
 </template>
@@ -19,6 +20,7 @@ export default {
   data () {
     return {
       msg: 'Регіони',
+      loader: true,
       info: {
         regionId: '',
         transactions: [],
@@ -43,8 +45,10 @@ export default {
   },
   methods: {
     getTransactions () {
-      axios('http://api.spending.gov.ua/api/v2/api/transactions/top100?region=' + this.info.regionId, { method: 'GET', mode: 'no-cors' })
+      this.loader = true
+      axios('https://thingproxy.freeboard.io/fetch/http://api.spending.gov.ua/api/v2/api/transactions/top100?region=' + this.info.regionId, { method: 'GET', mode: 'no-cors' })
         .then((response) => {
+          this.loader = false
           let arr = []
           for (let i = 0; i < 100; i++) {
             let graf = []
@@ -64,8 +68,10 @@ export default {
         })
     },
     getRegions () {
-      axios('http://api.spending.gov.ua/api/v2/regions', { method: 'GET', mode: 'no-cors' })
+      this.loader = true
+      axios('https://thingproxy.freeboard.io/fetch/http://api.spending.gov.ua/api/v2/regions', { method: 'GET', mode: 'no-cors' })
         .then((response) => {
+          this.loader = false
           response.data.shift()
           this.regions = response.data
         })
@@ -164,6 +170,12 @@ a {
   position: absolute;
   top: 7px;
   right: 7px;
+}
+.loader {
+  position: absolute;
+  bottom: -9em;
+  left: 50%;
+  transform: translate(-50%, 150%);
 }
 .select {
   display: inline-block;

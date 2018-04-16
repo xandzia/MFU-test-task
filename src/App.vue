@@ -43,6 +43,7 @@ export default {
   text-align: center;
   color: #212529;
   margin-top: 60px;
+  position: relative;
 }
 .print {
   color: #6c757d;
