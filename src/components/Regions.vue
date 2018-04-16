@@ -8,7 +8,7 @@
         <option v-for="region in regions" :key="region.regionCode" :value="region.regionCode">{{ region.regionName }}</option>
     </select>
       <span class="down">&#x25BC;</span>
-      <img class="loader" v-show="loader" src="/static/30.gif" alt="loader">
+      <img class="loader" v-show="loader" src="../assets/30.gif" alt="loader">
   </div>
   </b-container>
 </template>
