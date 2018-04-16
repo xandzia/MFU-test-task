@@ -2,7 +2,6 @@
   <b-container>
   <h1>{{ msg }}</h1>
   <div md="6" sm="12" class="forDown">
-<!--    <button v-on:click.prevent="getResult()">Search</button>-->
     <select class="select" v-model="info.regionId" v-on:click="emit" v-on:change="getTransactions()">
        <option disabled value="">Список регіонів</option>
         <option v-for="region in regions" :key="region.regionCode" :value="region.regionCode">{{ region.regionName }}</option>

@@ -1,7 +1,7 @@
 <template>
   <div id="app" >
 <!--    <img src="./assets/logo.png">-->
-   <a class="print" href="javascript:window.print()" label="print"><span>&#128438;</span></a>
+   <a class="print" href="javascript:window.print()" label="print" title="print page"><span>&#128438;</span></a>
    <regions v-on:event_child="eventChild"></regions>
    <transactions :infoData="data"></transactions>
    <mapdraw :infoData="data"></mapdraw>
@@ -49,7 +49,7 @@ export default {
   color: #6c757d;
   font-size: 2em;
   position: absolute;
-  top: 20px;
+  top: -40px;
   right: 20px;
 }
 .print:hover,
