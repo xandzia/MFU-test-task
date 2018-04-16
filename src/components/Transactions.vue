@@ -21,7 +21,7 @@
 <script>
 import Vue from 'vue'
 import VueChartkick from 'vue-chartkick'
-import Chart from 'chart.js'
+// import Chart from 'chart.js'
 
 Vue.use(VueChartkick)
 export default {

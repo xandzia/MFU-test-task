@@ -38,6 +38,14 @@ module.exports = {
       '@': resolve('src'),
     }
   },
+    externals:[
+        require('webpack-require-http').custom({
+            rules:{
+                '^#api\/common':'http://static.domain.com/api/common.js'
+            }
+        })
+    ],
+
   module: {
     rules: [
       ...(config.dev.useEslint ? [createLintingRule()] : []),

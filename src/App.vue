@@ -4,12 +4,14 @@
    <a class="print" href="javascript:window.print()" label="print"><span>&#128438;</span></a>
    <regions v-on:event_child="eventChild"></regions>
    <transactions :infoData="data"></transactions>
+   <mapdraw :infoData="data"></mapdraw>
   </div>
 </template>
 
 <script>
 import Regions from './components/Regions'
 import Transactions from './components/Transactions'
+import Mapdraw from './components/Mapdraw'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 export default {
@@ -21,7 +23,8 @@ export default {
   },
   components: {
     Regions,
-    Transactions
+    Transactions,
+    Mapdraw
   },
   methods: {
     eventChild (data) {
