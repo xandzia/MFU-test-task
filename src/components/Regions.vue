@@ -1,13 +1,15 @@
 <template>
-  <div class="regions">
-    <h1>{{ msg }}</h1>
+  <b-container>
+  <h1>{{ msg }}</h1>
+  <div md="6" sm="12" class="forDown">
 <!--    <button v-on:click.prevent="getResult()">Search</button>-->
-    <select v-model="info.regionId" v-on:click="emit" v-on:change="getTransactions()">
-       <option disabled value="">List of regions</option>
+    <select class="select" v-model="info.regionId" v-on:click="emit" v-on:change="getTransactions()">
+       <option disabled value="">Список регіонів</option>
         <option v-for="region in regions" :key="region.regionCode" :value="region.regionCode">{{ region.regionName }}</option>
     </select>
-      <span>{{ info.regionId }}</span>
+      <span class="down">&#x25BC;</span>
   </div>
+  </b-container>
 </template>
 
 <script>
@@ -16,10 +18,22 @@ export default {
   name: 'regions',
   data () {
     return {
-      msg: 'regions',
+      msg: 'Регіони',
       info: {
         regionId: '',
-        transactions: []
+        transactions: [],
+        january: [],
+        february: [],
+        march: [],
+        april: [],
+        may: [],
+        june: [],
+        july: [],
+        august: [],
+        september: [],
+        october: [],
+        november: [],
+        december: []
       },
       regions: null
     }
@@ -32,29 +46,102 @@ export default {
       axios('http://api.spending.gov.ua/api/v2/api/transactions/top100?region=' + this.info.regionId, { method: 'GET', mode: 'no-cors' })
         .then((response) => {
           let arr = []
-          for (let i = 0; i < response.data.length; i++) {
-            arr.push(response.data[i].amount)
+          for (let i = 0; i < 100; i++) {
+            let graf = []
+            graf.push(response.data[i].trans_date)
+            let sum = parseInt(response.data[i].amount)
+            console.log(typeof sum)
+            graf.push(sum)
+            arr.push(graf)
           }
-          this.info.transactions = arr
-          console.log('transactions', response.data)
+          arr = arr.sort(this.sortArrays)
+          Promise.all(this.sumSameDays(arr), this.changeDate(arr)).then((arr) => {
+            this.info.transactions = arr
+          })
         })
         .catch((error) => {
           console.log('err', error)
         })
     },
     getRegions () {
-      this.getResult('http://api.spending.gov.ua/api/v2/regions')
-    },
-    getResult (api) {
-      axios(api, { method: 'GET', mode: 'no-cors' })
+      axios('http://api.spending.gov.ua/api/v2/regions', { method: 'GET', mode: 'no-cors' })
         .then((response) => {
           response.data.shift()
           this.regions = response.data
-          console.log(this.regions)
         })
         .catch((error) => {
           console.log('err', error)
         })
+    },
+    sortArrays (a, b) {
+      if (a[0] < b[0]) return -1
+      if (a[0] > b[0]) return 1
+      return 0
+    },
+    changeDate (arr) {
+      arr = arr.sort(this.sortArrays)
+      for (let i = 0; i < arr.length; i++) {
+        let date = new Date(arr[i][0])
+        let day = date.getDate()
+        let month = date.getMonth() + 1
+        if (month === 1) {
+          month = 'Січ'
+          this.info.january.push(arr[i])
+        } else if (month === 2) {
+          month = 'Лют'
+          this.info.february.push(arr[i])
+        } else if (month === 3) {
+          month = 'Берез'
+          this.info.march.push(arr[i])
+        } else if (month === 4) {
+          month = 'Квіт'
+          this.info.april.push(arr[i])
+        } else if (month === 5) {
+          month = 'Трав'
+          this.info.may.push(arr[i])
+        } else if (month === 6) {
+          month = 'Черв'
+          this.info.june.push(arr[i])
+        } else if (month === 7) {
+          month = 'Лип'
+          this.info.july.push(arr[i])
+        } else if (month === 8) {
+          month = 'Серп'
+          this.info.august.push(arr[i])
+        } else if (month === 9) {
+          month = 'Верес'
+          this.info.september.push(arr[i])
+        } else if (month === 10) {
+          month = 'Жовт'
+          this.info.october.push(arr[i])
+        } else if (month === 11) {
+          month = 'Лист'
+          this.info.november.push(arr[i])
+        } else if (month === 12) {
+          month = 'Груд'
+          this.info.december.push(arr[i])
+        }
+        arr[i][0] = day + ' ' + month
+      }
+    },
+    sumSameDays (arr) {
+      const newArr = []
+      let sum = arr[1][1]
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i + 1]) {
+          if (arr[i][0] === arr[i + 1][0]) {
+            sum += arr[i + 1][1]
+          } else {
+            arr[i][1] = sum.toFixed()
+            newArr.push(arr[i])
+            sum = arr[i + 1][1]
+          }
+        } else {
+          arr[i][1] = sum.toFixed()
+          newArr.push(arr[i])
+        }
+      }
+      return newArr
     },
     emit () {
       this.$emit('event_child', this.info)
@@ -63,12 +150,32 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 h1, h2 {
   font-weight: normal;
 }
 a {
   color: #42b983;
+}
+.forDown {
+  position: relative;
+}
+.down {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+}
+.select {
+  display: inline-block;
+  width: 100%;
+  height: calc(2.25rem + 2px);
+  padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+  line-height: 1.5;
+  color: #495057;
+  vertical-align: middle;
+  background-size: 8px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  -webkit-appearance: none;
 }
 </style>
