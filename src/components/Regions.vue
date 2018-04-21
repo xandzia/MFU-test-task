@@ -1,19 +1,21 @@
 <template>
   <b-container>
-  <h1>{{ msg }}</h1>
-  <div md="6" sm="12" class="forDown">
-    <select class="select" v-model="info.regionId" v-on:click="emit" v-on:change="getTransactions()">
-       <option disabled value="">Список регіонів</option>
-        <option v-for="region in regions" :key="region.regionCode" :value="region.regionCode">{{ region.regionName }}</option>
-    </select>
+    <h1>{{ msg }}</h1>
+    <div md="6" sm="12" class="forDown">
+      <select class="select" v-model="info.regionId" v-on:click="emit" v-on:change="getTransactions()">
+        <option disabled value="">Список регіонів</option>
+        <option v-for="region in regions" :key="region.regionCode" :value="region.regionCode">{{ region.regionName }}
+        </option>
+      </select>
       <span class="down">&#x25BC;</span>
       <img class="loader" v-show="loader" src="../assets/30.gif" alt="loader">
-  </div>
+    </div>
   </b-container>
 </template>
 
 <script>
 import axios from 'axios'
+
 export default {
   name: 'regions',
   data () {
@@ -45,7 +47,10 @@ export default {
   methods: {
     getTransactions () {
       this.loader = true
-      axios('https://thingproxy.freeboard.io/fetch/http://api.spending.gov.ua/api/v2/api/transactions/top100?region=' + this.info.regionId, { method: 'GET', mode: 'no-cors' })
+      axios('https://thingproxy.freeboard.io/fetch/http://api.spending.gov.ua/api/v2/api/transactions/top100?region=' + this.info.regionId, {
+        method: 'GET',
+        mode: 'no-cors'
+      })
         .then((response) => {
           this.loader = false
           let arr = []
@@ -53,12 +58,11 @@ export default {
             let graf = []
             graf.push(response.data[i].trans_date)
             let sum = parseInt(response.data[i].amount)
-            console.log(typeof sum)
             graf.push(sum)
             arr.push(graf)
           }
           arr = arr.sort(this.sortArrays)
-          Promise.all(this.sumSameDays(arr), this.changeDate(arr)).then((arr) => {
+          Promise.all(this.sumSameDays(arr)).then((arr) => {
             this.info.transactions = arr
           })
         })
@@ -68,7 +72,10 @@ export default {
     },
     getRegions () {
       this.loader = true
-      axios('https://thingproxy.freeboard.io/fetch/http://api.spending.gov.ua/api/v2/regions', { method: 'GET', mode: 'no-cors' })
+      axios('https://thingproxy.freeboard.io/fetch/http://api.spending.gov.ua/api/v2/regions', {
+        method: 'GET',
+        mode: 'no-cors'
+      })
         .then((response) => {
           this.loader = false
           response.data.shift()
@@ -85,6 +92,7 @@ export default {
     },
     changeDate (arr) {
       arr = arr.sort(this.sortArrays)
+      console.log(arr)
       for (let i = 0; i < arr.length; i++) {
         let date = new Date(arr[i][0])
         let day = date.getDate()
@@ -130,23 +138,17 @@ export default {
       }
     },
     sumSameDays (arr) {
-      const newArr = []
-      let sum = arr[1][1]
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i + 1]) {
-          if (arr[i][0] === arr[i + 1][0]) {
-            sum += arr[i + 1][1]
-          } else {
-            arr[i][1] = sum.toFixed()
-            newArr.push(arr[i])
-            sum = arr[i + 1][1]
-          }
-        } else {
-          arr[i][1] = sum.toFixed()
-          newArr.push(arr[i])
+      const newArray = []
+      newArray.push(arr.reduce((acc, value) => {
+        if (acc[0] !== value[0]) {
+          newArray.push(acc)
+          acc = [value[0], 0]
         }
-      }
-      return newArr
+        return [value[0], acc[1] + value[1]]
+      }))
+      this.changeDate(newArray)
+      console.log(newArray)
+      return newArray
     },
     emit () {
       this.$emit('event_child', this.info)
@@ -156,37 +158,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h1, h2 {
-  font-weight: normal;
-}
-a {
-  color: #42b983;
-}
-.forDown {
-  position: relative;
-}
-.down {
-  position: absolute;
-  top: 7px;
-  right: 7px;
-}
-.loader {
-  position: absolute;
-  bottom: -9em;
-  left: 50%;
-  transform: translate(-50%, 150%);
-}
-.select {
-  display: inline-block;
-  width: 100%;
-  height: calc(2.25rem + 2px);
-  padding: 0.375rem 1.75rem 0.375rem 0.75rem;
-  line-height: 1.5;
-  color: #495057;
-  vertical-align: middle;
-  background-size: 8px 10px;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  -webkit-appearance: none;
-}
+  h1, h2 {
+    font-weight: normal;
+  }
+
+  a {
+    color: #42b983;
+  }
+
+  .forDown {
+    position: relative;
+  }
+
+  .down {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+  }
+
+  .loader {
+    position: absolute;
+    bottom: -9em;
+    left: 50%;
+    transform: translate(-50%, 150%);
+  }
+
+  .select {
+    display: inline-block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+    line-height: 1.5;
+    color: #495057;
+    vertical-align: middle;
+    background-size: 8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    -webkit-appearance: none;
+  }
 </style>
