@@ -72,7 +72,7 @@ export default {
     },
     getRegions () {
       this.loader = true
-      axios('https://thingproxy.freeboard.io/fetch/http://api.spending.gov.ua/api/v2/regions', {
+      axios('https://thingproxy.freeboard.io/fetch/http://api.spending.gov.ua/api/v2/dictionaries/regions', {
         method: 'GET',
         mode: 'no-cors'
       })
