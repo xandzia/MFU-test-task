@@ -47,7 +47,7 @@ export default {
   methods: {
     getTransactions () {
       this.loader = true
-      axios('https://thingproxy.freeboard.io/fetch/http://api.spending.gov.ua/api/v2/api/transactions/top100?region=' + this.info.regionId, {
+      axios('https://cors-escape.herokuapp.com/http://api.spending.gov.ua/api/v2/api/transactions/top100?region=' + this.info.regionId, {
         method: 'GET',
         mode: 'no-cors'
       })
@@ -72,7 +72,7 @@ export default {
     },
     getRegions () {
       this.loader = true
-      axios('https://thingproxy.freeboard.io/fetch/http://api.spending.gov.ua/api/v2/dictionaries/regions', {
+      axios('https://cors-escape.herokuapp.com/http://api.spending.gov.ua/api/v2/dictionaries/regions', {
         method: 'GET',
         mode: 'no-cors'
       })
